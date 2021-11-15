@@ -4,4 +4,4 @@ from django.test import TestCase
 class URLTests(TestCase):
     def test_faculty_home(self):
         response = self.client.get('/faculty',{},True)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 301)
