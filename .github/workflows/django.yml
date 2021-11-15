@@ -21,9 +21,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
+    - name: Change Directory
       run: |
         cd submissiontool
+    - name: Install Dependencies
+      run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
