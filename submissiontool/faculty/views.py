@@ -1,6 +1,25 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-# Create your views here.
-
+from submissiontool.config import firebase,firebaseConfig
+from django.views.decorators.cache import never_cache
+import pyrebase
+# Create your views here.   
+@never_cache
 def home(request):
-    return HttpResponse("Hello faculty")
+    if "uid" in request.session:
+        return render(request, 'faculty/dashboard.html')
+    message = None
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('secretkey')
+        auth = firebase.auth()
+        try:
+            user = auth.sign_in_with_email_and_password(email, password)
+            session_id = user['localId']
+            print(request)
+            request.session['uid'] = str(session_id)
+            return render(request, 'faculty/dashboard.html')
+        except:
+            message = "Invalid Credentials"
+
+    return render(request,'faculty/home.html',{"message":message})

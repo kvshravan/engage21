@@ -1,0 +1,34 @@
+%{
+#include<stdio.h>
+%}
+
+%%
+
+[a-z]+ {
+printf("Token: STRING; Lexeme: %s\n",yytext);
+}
+
+"Reverse" {
+printf("Token: REVERSE; Lexeme: Reverse\n");
+}
+
+[()#] {
+printf("Token and Lexeme: %s\n",yytext);
+}
+
+[ \t] {;}
+
+\n {
+printf("Token and Lexeme: <newline>\n");
+}
+
+%%
+
+int yywrap(){}
+int main() {
+yyin = fopen("testcase.txt","r");
+yylex();
+}
+
+
+

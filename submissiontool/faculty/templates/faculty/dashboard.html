@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Faculty | Dashboard</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href= "{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}"/>
+
+  <style type="text/css">
+  /* avoid stupid IE6 bug with frames and scrollbars */
+  #more{
+    cursor: pointer;
+  }
+  .grid-x {
+  padding-top: 50px;
+  padding-right: 30px;
+  padding-bottom: 50px;
+  padding-left: 80px;
+}
+  td {
+      padding-top: .3em;
+      padding-bottom: .3em;
+  }
+  </style>
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">Hello </div>
+      <div class="list-group list-group-flush">
+        <a href="" class="list-group-item list-group-item-action bg-light">Home</a>
+        <a href="" class="list-group-item list-group-item-action bg-light">Create Assignment</a>
+        <a href="" class="list-group-item list-group-item-action bg-light">Delete Assignment</a>
+        <a href="" class="list-group-item list-group-item-action bg-light">Change Password</a>
+        <a href="" class="list-group-item list-group-item-action bg-light">Log Out</a>
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+
+      </nav>
+
+      <div class="container-fluid">
+
+        <div class="grid-x">
+      </table>
+       <center><h5>No assignments to display. To create an Assignment head over to Create Assignment page.</h5></center>
+   </div>
+      </div>
+      <center>
+      </center>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Menu Toggle Script -->
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
+
+</body>
+
+</html>
