@@ -34,6 +34,16 @@
       padding-top: .3em;
       padding-bottom: .3em;
   }
+  #loading {
+    display: none;
+    width: 35px;
+    height: 35px;
+    background: url(/static/indicator-big.gif) no-repeat;
+    cursor: wait;
+    }
+    #show-message{
+      display: none;
+    }
   </style>
 </head>
 
@@ -62,15 +72,26 @@
       <div class="container-fluid">
 
         <div class="grid-x">
-         <form enctype="multipart/form-data" method="post" name="course_name" action="">
+
+        <div>
+        {% if message %}
+          <center><b><p style="color:red;">{{ message }}</p></b></center>
+        {% endif %}
+        <center><div id="loading"></div></center>
+        <center id="show-message"><b><p style="color:green;">Uploading Assignment, this might take a while... do not refresh the page</p></b></center>
+       </div>
+         <form enctype="multipart/form-data" method="post" name="course_name" onsubmit="loading()">
          {% csrf_token %}
        <h1>Create Assignment</h1>
        <p>Please fill this form to create an assignment.</p>
        <p>Note : Make sure you fill the correct course id.</p>
        <hr>
 
-       <label for="course_id"><b>Course ID</b></label>
-       <input type="text" placeholder="CS2XX" name="course_id" id="course_id" required>
+       <label for="course_id"><b>Course Name / Subject Name</b></label>
+       <input type="text" placeholder="Operating Systems" name="course_id" id="course_id" required>
+
+       <label for="assignment_name"><b>Assignment Name/Topic</b></label>
+       <input type="text" placeholder="Kernel" name="course_id" id="course_id" required>
 
        <label for="section_id"><b>Section ID</b></label>
        <input type="text" placeholder="CGXX" name="section_id" id="section_id" required>
@@ -79,8 +100,10 @@
        <input type=file name="assignment" required>
        <hr>
 
-       <center> <input class="btn btn-primary" type="submit" value="Upload">
+       <center>
+        <input class="btn btn-primary" type="submit" value="Upload">
        </center>
+       <br>
 
     </form>
    </div>
@@ -104,6 +127,14 @@
       $("#wrapper").toggleClass("toggled");
     });
   </script>
+    <script type="text/javascript">// <![CDATA[
+        function loading(){
+            $("#show-message").show();
+            $("#loading").show();
+
+        }
+// ]]></script>
+
 
 </body>
 

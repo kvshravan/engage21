@@ -16,6 +16,7 @@
 
   <!-- Custom styles for this template -->
   <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}"/>
   <link rel="stylesheet" href="{% static 'css/app.css' %}"/>
 
   <style type="text/css">
@@ -64,8 +65,32 @@
       <div class="container-fluid">
 
         <div class="grid-x">
-      </table>
+        {% if assignmentData%}
+          {% for section,assignmentIter in assignmentData.items %}
+          <b><h4 >Assignments | Section - {{ section }}</h4></b>
+
+          <table class="stack hover sortable" id="courseTable">
+            <thead>
+              <tr>
+                  <th >Course Name</th>
+                  <th >Assignment</th>
+                  <th >Submission</th>
+                </tr>
+            </thead>
+              <tbody>
+                {% for key,name in assignmentIter.items %}
+                <tr>
+                  <td onclick="myFunction(event)" id="#more">{{ name }}</td>
+                  <td>{{key}}</td>
+                  <td><a href="">View Submissions</a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endfor %}
+        {% else %}
        <center><h5>No assignments to display. To create an Assignment head over to Create Assignment page.</h5></center>
+       {% endif %}
    </div>
       </div>
       <center>
