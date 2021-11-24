@@ -9,13 +9,14 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Faculty | Dashboard</title>
+  <title>Faculty | Create</title>
 
   <!-- Bootstrap core CSS -->
   <link href= "{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
   <!-- Custom styles for this template -->
   <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}"/>
   <link rel="stylesheet" href="{% static 'css/app.css' %}"/>
 
   <style type="text/css">
@@ -44,10 +45,7 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Hello </div>
       <div class="list-group list-group-flush">
-        <a href="" class="list-group-item list-group-item-action bg-light">Home</a>
-        <a href="{% url 'create' %}" class="list-group-item list-group-item-action bg-light">Create Assignment</a>
-        <a href="" class="list-group-item list-group-item-action bg-light">Delete Assignment</a>
-        <a href="" class="list-group-item list-group-item-action bg-light">Change Password</a>
+        <a href="{% url 'home' %}" class="list-group-item list-group-item-action bg-light">Home</a>
         <a href="{% url 'logout' %}" class="list-group-item list-group-item-action bg-light">Log Out</a>
       </div>
     </div>
@@ -64,8 +62,27 @@
       <div class="container-fluid">
 
         <div class="grid-x">
-      </table>
-       <center><h5>No assignments to display. To create an Assignment head over to Create Assignment page.</h5></center>
+         <form enctype="multipart/form-data" method="post" name="course_name" action="">
+         {% csrf_token %}
+       <h1>Create Assignment</h1>
+       <p>Please fill this form to create an assignment.</p>
+       <p>Note : Make sure you fill the correct course id.</p>
+       <hr>
+
+       <label for="course_id"><b>Course ID</b></label>
+       <input type="text" placeholder="CS2XX" name="course_id" id="course_id" required>
+
+       <label for="section_id"><b>Section ID</b></label>
+       <input type="text" placeholder="CGXX" name="section_id" id="section_id" required>
+      <hr>
+       <label for="assignment"><b>Upload Assignment</b></label>
+       <input type=file name="assignment" required>
+       <hr>
+
+       <center> <input class="btn btn-primary" type="submit" value="Upload">
+       </center>
+
+    </form>
    </div>
       </div>
       <center>
