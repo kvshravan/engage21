@@ -41,9 +41,19 @@ def dashboard(request):
     if "uid" not in request.session:
         return redirect(home)
     db = firebase.database()
-    assignmentsData = db.child("faculty").child(request.session['uid']).get()
+    name = db.child("faculty").child(request.session['uid']).get()
+    assignmentsData = db.child("assignments").order_by_child(
+        "facultyid").equal_to(request.session['uid']).get()
+    sectionData = {}
+    for key in assignmentsData.val():
+        detailDict = assignmentsData.val()[key]
+        sectionKey = detailDict['sectionid']
+        if sectionKey not in sectionData:
+            sectionData[sectionKey] = []
+        sectionData[sectionKey].append(detailDict)
     return render(request, 'faculty/dashboard.html',
-                  {'assignmentData': assignmentsData.val()})
+                  {'name': name.val(),
+                   'assignmentData': sectionData})
 
 
 @never_cache
@@ -51,16 +61,19 @@ def createAssignment(request):
     if "uid" not in request.session:
         return redirect(home)
     message = None
+    db = firebase.database()
+    name = db.child("faculty").child(request.session['uid']).get()
     if request.method == "POST":
         db = firebase.database()
         try:
-            ref = db.child("assignments").child(
-                request.POST.get("section_id")).push(
-                request.POST.get("course_id"))
+            data = {"course_id": request.POST.get("course_id"),
+                    "asname": request.POST.get("asname"),
+                    "deadline": request.POST.get("deadline"),
+                    "facultyid": request.session['uid'],
+                    "sectionid": request.POST.get("sectionid")
+                    }
+            ref = db.child("assignments").push(data)
             print(ref)
-            db.child("faculty").child(request.session['uid']).child(
-                request.POST.get("section_id")).child(ref["name"]).set(
-                request.POST.get("course_id"))
             uploaded_file = request.FILES['assignment']
             file_name = default_storage.save(ref['name']+'.pdf', uploaded_file)
             # print(file_name)
@@ -74,4 +87,4 @@ def createAssignment(request):
             print(e)
             message = "Error in uploading"
 
-    return render(request, 'faculty/create.html', {"message": message})
+    return render(request, 'faculty/create.html', {"name": name.val(), "message": message})

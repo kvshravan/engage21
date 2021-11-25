@@ -12,7 +12,7 @@ if (self != top) { try { if (document.domain != top.document.domain) { throw "Cl
 // -->
 </script>
 
-<title>Student - Login</title>
+<title>Student - SignUp</title>
 <style type="text/css">
 /* avoid stupid IE6 bug with frames and scrollbars */
 #more{
@@ -27,7 +27,7 @@ td {
 
 </head>
 
-
+<body>
 <form  method="post" name="login_form"  >
 {% csrf_token %}
 <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td align="center"><center><br />
@@ -49,17 +49,29 @@ td {
 
 </td>
 </tr>
+<tr><td align="right" width="30%">Roll No:</td>
+<td align="left" width="70%"><input type="text" name="rollno" onfocus="alreadyFocused=true;" autocomplete="off" required/>
+
+</td>
+</tr>
+<tr><td align="right" width="30%">Name:</td>
+<td align="left" width="70%"><input type="text" name="name" onfocus="alreadyFocused=true;" autocomplete="off" required/>
+
+</td>
+</tr>
+<tr><td align="right" width="30%">Section:</td>
+<td align="left" width="70%"><input type="text" name="section_id" onfocus="alreadyFocused=true;" autocomplete="off" required/>
+
+</td>
+</tr>
 </table>
 </td>
 </tr>
 
-<tr><td align="left"><center><input id="more" type="submit" value="Login" />
+<tr><td align="left"><center><input id="more" type="submit" value="SignUp" />
 </center></td>
 </tr>
-</table>
-</center></td>
-</tr>
-<tr><td align="left"><center><small>Don't have an account? <a href="{% url 'student-signup' %}">SignUp</a> </small></p>
+<tr><td align="left"><center><small>Already have an account? <a href="{% url 'student-home' %}">SignIn</a> </small></p>
 </center></td>
 </tr>
 </table>

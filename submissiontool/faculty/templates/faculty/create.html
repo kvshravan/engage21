@@ -53,10 +53,10 @@
 
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
-      <div class="sidebar-heading">Hello </div>
+      <div class="sidebar-heading">Hello {{name.name}}</div>
       <div class="list-group list-group-flush">
-        <a href="{% url 'home' %}" class="list-group-item list-group-item-action bg-light">Home</a>
-        <a href="{% url 'logout' %}" class="list-group-item list-group-item-action bg-light">Log Out</a>
+        <a href="{% url 'faculty-home' %}" class="list-group-item list-group-item-action bg-light">Home</a>
+        <a href="{% url 'faculty-logout' %}" class="list-group-item list-group-item-action bg-light">Log Out</a>
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -90,11 +90,14 @@
        <label for="course_id"><b>Course Name / Subject Name</b></label>
        <input type="text" placeholder="Operating Systems" name="course_id" id="course_id" required>
 
-       <label for="assignment_name"><b>Assignment Name/Topic</b></label>
-       <input type="text" placeholder="Kernel" name="course_id" id="course_id" required>
+       <label for="assignment_name"><b>Assignment Name / Topic</b></label>
+       <input type="text" placeholder="Kernel" name="asname" id="asname" required>
 
-       <label for="section_id"><b>Section ID</b></label>
-       <input type="text" placeholder="CGXX" name="section_id" id="section_id" required>
+       <label for="section_id"><b>Section ID / Batch</b></label>
+       <input type="text" placeholder="CGXX" name="sectionid" id="section_id" required>
+
+       <label for="section_id"><b>Deadline</b></label>
+       <input type="date" placeholder="CGXX" name="deadline" id="deadline" required>
       <hr>
        <label for="assignment"><b>Upload Assignment</b></label>
        <input type=file name="assignment" required>
@@ -129,6 +132,7 @@
   </script>
     <script type="text/javascript">// <![CDATA[
         function loading(){
+          window.scrollTo(0, 0);
             $("#show-message").show();
             $("#loading").show();
 
