@@ -47,6 +47,7 @@ def dashboard(request):
     sectionData = {}
     for key in assignmentsData.val():
         detailDict = assignmentsData.val()[key]
+        detailDict['assign_id'] = key
         sectionKey = detailDict['sectionid']
         if sectionKey not in sectionData:
             sectionData[sectionKey] = []
@@ -78,7 +79,7 @@ def createAssignment(request):
             file_name = default_storage.save(ref['name']+'.pdf', uploaded_file)
             # print(file_name)
             storage = firebase.storage()
-            path_on_cloud = ref['name']+'.pdf'
+            path_on_cloud = ref['name']+'/'+ref['name']+'.pdf'
             path_local = settings.MEDIA_ROOT+'/'+file_name
             # print(path_local)
             storage.child(path_on_cloud).put(path_local)
@@ -88,3 +89,37 @@ def createAssignment(request):
             message = "Error in uploading"
 
     return render(request, 'faculty/create.html', {"name": name.val(), "message": message})
+
+
+@never_cache
+def view_submissions(request, slug=None):
+    if "uid" not in request.session:
+        return redirect(home)
+    db = firebase.database()
+    name = db.child("faculty").child(request.session['uid']).get()
+    assignmentsData = db.child("assignments").child(
+        slug).get()
+    print(assignmentsData.val())
+    val = assignmentsData.val()
+    print(val)
+    if 'submissions' in val:
+        for key, params in val["submissions"].items():
+            params['link'] = generate_link(slug, key, request.session['uid'])
+    return render(request, 'faculty/view.html',
+                  {'name': name.val(),
+                   'assignmentData': assignmentsData.val()})
+
+
+def generate_link(assignment_id, student_id, uid):
+    link = None
+    try:
+        storage = firebase.storage()
+        link = storage.child(assignment_id).child(
+            "submissions").child(student_id+'.pdf').get_url(uid)
+        print(link)
+        return link
+    except Exception as e:
+        print(e)
+        print('Failed')
+
+    return link

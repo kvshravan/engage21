@@ -45,10 +45,7 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Hello {{name.name}}</div>
       <div class="list-group list-group-flush">
-        <a href="" class="list-group-item list-group-item-action bg-light">Home</a>
-        <a href="{% url 'faculty-create' %}" class="list-group-item list-group-item-action bg-light">Create Assignment</a>
-        <a href="" class="list-group-item list-group-item-action bg-light">Delete Assignment</a>
-        <a href="" class="list-group-item list-group-item-action bg-light">Change Password</a>
+        <a href="{% url 'faculty-home' %}" class="list-group-item list-group-item-action bg-light">Home</a>
         <a href="{% url 'faculty-logout' %}" class="list-group-item list-group-item-action bg-light">Log Out</a>
       </div>
     </div>
@@ -65,33 +62,29 @@
       <div class="container-fluid">
 
         <div class="grid-x">
-        {% if assignmentData%}
-          {% for section,assignmentIter in assignmentData.items %}
-          <b><h4 >Assignments | Section - {{ section }}</h4></b>
+        {% if assignmentData.submissions%}
+          <b><h4 >Submissions | {{ assignmentData.course_id }} | {{ assignmentData.asname }}</h4></b>
 
           <table class="stack hover sortable" id="courseTable">
             <thead>
               <tr>
-                  <th >Course Name</th>
-                  <th >Assignment</th>
-                  <th >Deadline</th>
+                  <th >Roll No</th>
+                  <th >Name</th>
                   <th >Submission</th>
                 </tr>
             </thead>
               <tbody>
-                {% for item in assignmentIter%}
+                {% for key,item in assignmentData.submissions.items %}
                 <tr>
-                  <td onclick="myFunction(event)" id="#more">{{ item.course_id }}</td>
-                  <td>{{item.asname}}</td>
-                  <td>{{item.deadline}} <a href="">(extend)</a></td>
-                  <td><a href="{% url 'faculty-view' item.assign_id %}">View Submissions</a></td>
+                  <td onclick="myFunction(event)" id="#more">{{ item.rollno }}</td>
+                  <td>{{item.name}}</td>
+                  <td><a href="{{item.link}}" target="_blank">View Submission</a></td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
-          {% endfor %}
         {% else %}
-       <center><h5>No assignments to display. To create an Assignment head over to Create Assignment page.</h5></center>
+       <center><h5>No Submissions to display.</h5></center>
        {% endif %}
    </div>
       </div>

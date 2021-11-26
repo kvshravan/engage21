@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Faculty | Create</title>
+  <title>Student | Upload</title>
 
   <!-- Bootstrap core CSS -->
   <link href= "{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -53,10 +53,10 @@
 
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
-      <div class="sidebar-heading">Hello {{name.name}}</div>
+      <div class="sidebar-heading">Hello {{student.name}}</div>
       <div class="list-group list-group-flush">
-        <a href="{% url 'faculty-dashboard' %}" class="list-group-item list-group-item-action bg-light">Home</a>
-        <a href="{% url 'faculty-logout' %}" class="list-group-item list-group-item-action bg-light">Log Out</a>
+        <a href="{% url 'student-dashboard' %}" class="list-group-item list-group-item-action bg-light">Home</a>
+        <a href="{% url 'student-logout' %}" class="list-group-item list-group-item-action bg-light">Log Out</a>
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -82,22 +82,20 @@
        </div>
          <form enctype="multipart/form-data" method="post" name="course_name" onsubmit="loading()">
          {% csrf_token %}
-       <h1>Create Assignment</h1>
-       <p>Please fill this form to create an assignment.</p>
-       <p>Note : Make sure you fill the correct course id.</p>
+       <h1>Submit Assignment</h1>
        <hr>
 
        <label for="course_id"><b>Course Name / Subject Name</b></label>
-       <input type="text" placeholder="Operating Systems" name="course_id" id="course_id" required>
+       <h6 id="course_id"> {{ asObj.course_id }}</h6>
 
        <label for="assignment_name"><b>Assignment Name / Topic</b></label>
-       <input type="text" placeholder="Kernel" name="asname" id="asname" required>
+       <h6 id="assignment_name"> {{ asObj.asname }}</h6>
 
        <label for="section_id"><b>Section ID / Batch</b></label>
-       <input type="text" placeholder="CGXX" name="sectionid" id="section_id" required>
+       <h6 id="section_id"> {{ asObj.sectionid }}</h6>
 
-       <label for="section_id"><b>Deadline</b></label>
-       <input type="date" placeholder="CGXX" name="deadline" id="deadline" required>
+       <label for="deadline"><b>Deadline</b></label>
+       <h6 id="deadline"> {{ asObj.deadline }}</h6>
       <hr>
        <label for="assignment"><b>Upload Assignment</b></label>
        <input type=file name="assignment" required>

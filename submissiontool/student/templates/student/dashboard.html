@@ -81,7 +81,11 @@
                   <td onclick="myFunction(event)" id="#more">{{ item.course_id }}</td>
                   <td><a href="{% url 'student-view' key %}">{{ item.asname }}</a></td>
                   <td>{{ item.deadline }}</td>
-                  <td><a href="">Submit Assignment</a></td>
+                  {% if date <= item.deadline %}
+                  <td><a href="{% url 'student-submit' key %}">Submit Assignment</a></td>
+                  {% else %}
+                  <td><a  style="color:red">Deadline Passed</a></td>
+                  {% endif %}
                 </tr>
                 {% endfor %}
               </tbody>

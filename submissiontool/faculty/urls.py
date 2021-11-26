@@ -6,4 +6,6 @@ urlpatterns = [
     path('logout/', views.logout, name="faculty-logout"),
     path('dashboard/', views.dashboard, name="faculty-dashboard"),
     path('create/', views.createAssignment, name="faculty-create"),
+    path('view/<slug:slug>/', views.view_submissions,
+         name='faculty-view'),
 ]
