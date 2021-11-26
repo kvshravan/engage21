@@ -45,13 +45,16 @@ def dashboard(request):
     assignmentsData = db.child("assignments").order_by_child(
         "facultyid").equal_to(request.session['uid']).get()
     sectionData = {}
-    for key in assignmentsData.val():
-        detailDict = assignmentsData.val()[key]
-        detailDict['assign_id'] = key
-        sectionKey = detailDict['sectionid']
-        if sectionKey not in sectionData:
-            sectionData[sectionKey] = []
-        sectionData[sectionKey].append(detailDict)
+    try:
+        for key in assignmentsData.val():
+            detailDict = assignmentsData.val()[key]
+            detailDict['assign_id'] = key
+            sectionKey = detailDict['sectionid']
+            if sectionKey not in sectionData:
+                sectionData[sectionKey] = []
+            sectionData[sectionKey].append(detailDict)
+    except Exception as e:
+        print('error')
     return render(request, 'faculty/dashboard.html',
                   {'name': name.val(),
                    'assignmentData': sectionData})
