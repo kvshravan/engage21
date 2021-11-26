@@ -77,6 +77,19 @@
         {% if message %}
           <center><b><p style="color:red;">{{ message }}</p></b></center>
         {% endif %}
+        {% if workLoad %}
+          <p >Number of assignments within deadline: <b>{{workLoad.noAssignments}} </b></p>
+          <p >Deadline Given : <b>{{workLoad.deadline}}</b></p>
+          <p >Estimated student WorkLoad :
+            {% if workLoad.load >= 2%}
+            <b >{{workLoad.wload}} <span style="color:red;">( High )</span></b>
+            {% elif workLoad.load >= 1 %}
+            <b >{{workLoad.wload}} <span style="color:#FFAE42;">( Moderate )</span></b>
+            {% else %}
+            <b >{{workLoad.wload}} <span style="color:green;">( Low )</span></b>
+            {% endif %}
+          </p>
+        {% endif %}
         <center><div id="loading"></div></center>
         <center id="show-message"><b><p style="color:green;">Uploading Assignment, this might take a while... do not refresh the page</p></b></center>
        </div>
@@ -102,9 +115,9 @@
        <label for="assignment"><b>Upload Assignment</b></label>
        <input type=file name="assignment" required>
        <hr>
-
+       <input class="btn btn-outline-primary" onclick="buttonIndex=0;" type="submit" name="workload" value="Check for workload">
        <center>
-        <input class="btn btn-primary" type="submit" value="Upload">
+        <input class="btn btn-primary" onclick="buttonIndex=1; "type="submit" name="upload" value="Upload">
        </center>
        <br>
 
@@ -133,9 +146,10 @@
     <script type="text/javascript">// <![CDATA[
         function loading(){
           window.scrollTo(0, 0);
+          if (buttonIndex == 1){
             $("#show-message").show();
             $("#loading").show();
-
+          }
         }
 // ]]></script>
 

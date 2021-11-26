@@ -8,4 +8,6 @@ urlpatterns = [
     path('create/', views.createAssignment, name="faculty-create"),
     path('view/<slug:slug>/', views.view_submissions,
          name='faculty-view'),
+    path('edit/<slug:slug>/', views.extend_deadline,
+         name='faculty-extend'),
 ]

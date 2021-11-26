@@ -5,6 +5,7 @@ from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib import auth
+from datetime import datetime
 # Create your views here.
 
 
@@ -65,9 +66,10 @@ def createAssignment(request):
     if "uid" not in request.session:
         return redirect(home)
     message = None
+    workLoad = None
     db = firebase.database()
     name = db.child("faculty").child(request.session['uid']).get()
-    if request.method == "POST":
+    if request.method == "POST" and "upload" in request.POST:
         db = firebase.database()
         try:
             data = {"course_id": request.POST.get("course_id"),
@@ -90,8 +92,27 @@ def createAssignment(request):
         except Exception as e:
             print(e)
             message = "Error in uploading"
-
-    return render(request, 'faculty/create.html', {"name": name.val(), "message": message})
+    if request.method == "POST" and 'workload' in request.POST:
+        assignmentsData = db.child("assignments").order_by_child(
+            "sectionid").equal_to(request.POST.get("sectionid")).get()
+        noAssignments = 0
+        date_format = '%Y-%m-%d'
+        today = datetime.today().strftime(date_format)
+        delta = datetime.strptime(request.POST.get(
+            "deadline"), date_format) - datetime.strptime(today, date_format)
+        noDays = delta.days
+        value = assignmentsData.val()
+        if len(value) > 0:
+            for key, item in value.items():
+                if item['deadline'] >= today and item['deadline'] <= request.POST.get("deadline"):
+                    noAssignments += 1
+        load = ((noAssignments+1)/(noDays))
+        workLoad = {"noDays": noDays, "noAssignments": noAssignments,
+                    "deadline": request.POST.get("deadline"),
+                    "load": 2*load,
+                    "wload": load
+                    }
+    return render(request, 'faculty/create.html', {"workLoad": workLoad, "name": name.val(), "message": message})
 
 
 @never_cache
@@ -126,3 +147,20 @@ def generate_link(assignment_id, student_id, uid):
         print('Failed')
 
     return link
+
+
+@never_cache
+def extend_deadline(request, slug=None):
+    db = firebase.database()
+    name = db.child("faculty").child(request.session['uid']).get()
+    assignment = db.child("assignments").child(slug).get()
+    print(assignment.val())
+    if request.method == "POST":
+        try:
+            db.child("assignments").child(slug).update(
+                {'deadline': request.POST.get("newdeadline")})
+            return redirect(dashboard)
+        except Exception as e:
+            raise
+
+    return render(request, 'faculty/extend.html', {'name': name.val(), 'asObj': assignment.val()})
