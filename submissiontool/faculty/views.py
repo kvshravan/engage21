@@ -121,16 +121,20 @@ def view_submissions(request, slug=None):
         return redirect(home)
     db = firebase.database()
     name = db.child("faculty").child(request.session['uid']).get()
-    assignmentsData = db.child("assignments").child(
+    assignmentsData = db.child("assignments").child("submissions").child(
         slug).get()
+    asname = db.child("assignments").child(slug).child(
+        "asname").get()
     print(assignmentsData.val())
     val = assignmentsData.val()
     print(val)
-    if 'submissions' in val:
-        for key, params in val["submissions"].items():
+    if val:
+        for key, params in val.items():
             params['link'] = generate_link(slug, key, request.session['uid'])
+    print(val)
     return render(request, 'faculty/view.html',
                   {'name': name.val(),
+                   'asname': asname.val(),
                    'assignmentData': assignmentsData.val()})
 
 

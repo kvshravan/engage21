@@ -62,8 +62,8 @@
       <div class="container-fluid">
 
         <div class="grid-x">
-        {% if assignmentData.submissions%}
-          <b><h4 >Submissions | {{ assignmentData.course_id }} | {{ assignmentData.asname }}</h4></b>
+        {% if assignmentData%}
+          <b><h4 >Submissions | {{ asname }}</h4></b>
 
           <table class="stack hover sortable" id="courseTable">
             <thead>
@@ -74,7 +74,7 @@
                 </tr>
             </thead>
               <tbody>
-                {% for key,item in assignmentData.submissions.items %}
+                {% for key,item in assignmentData.items %}
                 <tr>
                   <td onclick="myFunction(event)" id="#more">{{ item.rollno }}</td>
                   <td>{{item.name}}</td>

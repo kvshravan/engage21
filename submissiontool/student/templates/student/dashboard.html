@@ -72,7 +72,9 @@
                   <th >Course Name</th>
                   <th >Assignment</th>
                   <th >Deadline</th>
+                  <th >Status</th>
                   <th >Submission</th>
+                  <th >Marks</th>
                 </tr>
             </thead>
               <tbody>
@@ -81,11 +83,17 @@
                   <td onclick="myFunction(event)" id="#more">{{ item.course_id }}</td>
                   <td><a href="{% url 'student-view' key %}">{{ item.asname }}</a></td>
                   <td>{{ item.deadline }}</td>
+                  {% if item.status == 1%}
+                  <td><a  style="color:green">Submitted</a></td>
+                  {% else %}
+                  <td><a  style="color:red">Not Submitted</a></td>
+                  {% endif %}
                   {% if date <= item.deadline %}
                   <td><a href="{% url 'student-submit' key %}">Submit Assignment</a></td>
                   {% else %}
                   <td><a  style="color:red">Deadline Passed</a></td>
                   {% endif %}
+                  <td><center>{{ item.marks }}</center></td>
                 </tr>
                 {% endfor %}
               </tbody>

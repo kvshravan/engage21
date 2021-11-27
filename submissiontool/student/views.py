@@ -74,7 +74,16 @@ def dashboard(request):
         data = db.child("students").child(request.session['uid']).get()
         assignmentObj = db.child("assignments").order_by_child(
             "sectionid").equal_to(data.val()['section_id']).get()
-        print(assignmentObj.val())
+        if assignmentObj.val():
+            for key, assignment in assignmentObj.val().items():
+                marks = db.child("assignments").child("submissions").child(
+                    key).child(request.session['uid']).child("marks").get()
+                if marks.val() is not None:
+                    assignment['status'] = 1
+                    assignment['marks'] = marks.val()
+                else:
+                    assignment['status'] = 0
+                    assignment['marks'] = '-'
         contextDict = {'date': datetime.today().strftime('%Y-%m-%d'),
                        'name': data.val(),
                        'assignmentData': assignmentObj.val()}
@@ -115,8 +124,10 @@ def submit_assignment(request, slug=None):
             path_local = settings.MEDIA_ROOT+'/'+file_name
             # print(path_local)
             storage.child(path_on_cloud).put(path_local)
-            db.child("assignments").child(slug).child("submissions").child(
-                request.session['uid']).set(data.val())
+            val = data.val()
+            val['marks'] = '-'
+            db.child("assignments").child("submissions").child(slug).child(
+                request.session['uid']).set(val)
         except Exception as e:
             print('error')
         return redirect(dashboard)
