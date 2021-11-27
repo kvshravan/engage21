@@ -70,7 +70,8 @@
               <tr>
                   <th >Roll No</th>
                   <th >Name</th>
-                  <th >Submission</th>
+                  <th >Marks</th>
+                  <th >Evaluate</th>
                 </tr>
             </thead>
               <tbody>
@@ -78,7 +79,8 @@
                 <tr>
                   <td onclick="myFunction(event)" id="#more">{{ item.rollno }}</td>
                   <td>{{item.name}}</td>
-                  <td><a href="{{item.link}}" target="_blank">View Submission</a></td>
+                  <td>{{item.marks}}</td>
+                  <td><a href="{% url 'faculty-evaluate' asid key %}" >Evaluate Submission</a></td>
                 </tr>
                 {% endfor %}
               </tbody>

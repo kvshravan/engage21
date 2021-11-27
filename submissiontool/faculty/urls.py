@@ -10,4 +10,6 @@ urlpatterns = [
          name='faculty-view'),
     path('edit/<slug:slug>/', views.extend_deadline,
          name='faculty-extend'),
+    path('evaluate/<slug:asid>/<slug:sid>/', views.evaluate_submission,
+         name='faculty-evaluate'),
 ]

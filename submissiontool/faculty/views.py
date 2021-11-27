@@ -126,14 +126,9 @@ def view_submissions(request, slug=None):
     asname = db.child("assignments").child(slug).child(
         "asname").get()
     print(assignmentsData.val())
-    val = assignmentsData.val()
-    print(val)
-    if val:
-        for key, params in val.items():
-            params['link'] = generate_link(slug, key, request.session['uid'])
-    print(val)
     return render(request, 'faculty/view.html',
                   {'name': name.val(),
+                   'asid': slug,
                    'asname': asname.val(),
                    'assignmentData': assignmentsData.val()})
 
@@ -155,6 +150,8 @@ def generate_link(assignment_id, student_id, uid):
 
 @never_cache
 def extend_deadline(request, slug=None):
+    if "uid" not in request.session:
+        return redirect(home)
     db = firebase.database()
     name = db.child("faculty").child(request.session['uid']).get()
     assignment = db.child("assignments").child(slug).get()
@@ -168,3 +165,27 @@ def extend_deadline(request, slug=None):
             raise
 
     return render(request, 'faculty/extend.html', {'name': name.val(), 'asObj': assignment.val()})
+
+
+@never_cache
+def evaluate_submission(request, asid=None, sid=None):
+    if "uid" not in request.session:
+        return redirect(home)
+    db = firebase.database()
+    name = db.child("faculty").child(request.session['uid']).get()
+    asname = db.child("assignments").child(asid).child(
+        "asname").get()
+    assignment = db.child("assignments").child(
+        "submissions").child(asid).child(sid).get()
+    val = assignment.val()
+    val['link'] = generate_link(asid, sid, request.session['uid'])
+    print(val)
+    if request.method == "POST":
+        try:
+            db.child("assignments").child("submissions").child(asid).child(sid).update(
+                {'marks': request.POST.get("newmarks")})
+            return redirect('faculty-view', slug=asid)
+        except Exception as e:
+            raise
+
+    return render(request, 'faculty/evaluate.html', {'name': name.val(), 'asname': asname.val(), 'asObj': val})

@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Faculty | Extend</title>
+  <title>Faculty | Evaluate</title>
 
   <!-- Bootstrap core CSS -->
   <link href= "{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -65,27 +65,26 @@
 
        <form enctype="multipart/form-data" method="post" name="course_name" >
        {% csrf_token %}
-     <h1>Edit / Extend Deadline</h1>
+     <h1>Evaluate/Edit Submission</h1>
      <hr>
-
-     <label for="course_id"><b>Course Name / Subject Name</b></label>
-     <h6 id="course_id"> {{ asObj.course_id }}</h6>
 
      <label for="assignment_name"><b>Assignment Name / Topic</b></label>
-     <h6 id="assignment_name"> {{ asObj.asname }}</h6>
+     <h6 id="assignment_name"> {{ asname }}</h6>
 
-     <label for="section_id"><b>Section ID / Batch</b></label>
-     <h6 id="section_id"> {{ asObj.sectionid }}</h6>
-
-     <label for="deadline"><b>Old Deadline</b></label>
-     <h6 id="deadline"> {{ asObj.deadline }}</h6>
+     <label for="section_id"><b>Student Rollno</b></label>
+     <h6 id="section_id"> {{ asObj.rollno }}</h6>
+     <label for="submission"><b>Submission</b></label>
+     <h6><a href="{{asObj.link}}" target="_blank">View Submission</a></h6>
+     <label for="deadline"><b>Student Name</b></label>
+     <h6 id="deadline"> {{ asObj.name }}</h6>
+     <label for="deadline"><b>Marks Given</b></label>
+     <h6 id="deadline"> {{ asObj.marks }}</h6>
     <hr>
-     <label for="newdeadline"><b>Pick a new Deadline</b></label>
-     <input type="date" id ="newdeadline" name="newdeadline" required>
+     <label for="newmarks"><b>Award Marks</b></label>
+     <input type="text" placeholder="50" name="newmarks" id="newmarks" required>
      <hr>
-
      <center>
-      <input class="btn btn-primary" type="submit" value="Update">
+      <input class="btn btn-primary" type="submit" value="Submit">
      </center>
      <br>
 
