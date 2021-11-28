@@ -2,7 +2,7 @@
 
 ## MAIN FEATURES
 1) Estimate student workload (number of assignments/numberof days until deadline)
-2) extent deadline
+2) Extend deadline
 ## Features
 1) Faculty - Login
 2) Faculty - SignUp (using admin)
