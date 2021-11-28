@@ -20,7 +20,6 @@ def home(request):
         try:
             user = fauth.sign_in_with_email_and_password(email, password)
             session_id = user['localId']
-            print(request)
             request.session['uid'] = str(session_id)
             request.session['idToken'] = str(user['idToken'])
             return redirect(dashboard)
@@ -42,7 +41,6 @@ def signUp(request):
         try:
             user = fauth.create_user_with_email_and_password(email, password)
             session_id = user['localId']
-            print(request)
             request.session['uid'] = str(session_id)
             db = firebase.database()
             data = {'rollno': request.POST.get('rollno'),
@@ -50,7 +48,6 @@ def signUp(request):
                     'section_id': request.POST.get('section_id')
                     }
             ref = db.child("students").child(request.session['uid']).set(data)
-            print(ref)
             return redirect(dashboard)
         except:
             message = "Error signing Up"
@@ -98,11 +95,9 @@ def view_assignment(request, slug=None):
         storage = firebase.storage()
         link = storage.child(slug).child(
             slug+'.pdf').get_url(request.session["uid"])
-        print(link)
         return redirect(link)
     except Exception as e:
-        print(e)
-        print('Failed')
+        print('error')
 
     return render(dashboard)
 
@@ -110,19 +105,15 @@ def view_assignment(request, slug=None):
 def submit_assignment(request, slug=None):
     db = firebase.database()
     data = db.child("students").child(request.session['uid']).get()
-    print(data.val())
     assignment = db.child("assignments").child(slug).get()
-    print(assignment.val())
     if request.method == "POST":
         uploaded_file = request.FILES['assignment']
         try:
             file_name = default_storage.save(
                 slug+data.val()['rollno']+'.pdf', uploaded_file)
-            # print(file_name)
             storage = firebase.storage()
             path_on_cloud = slug+'/submissions/'+request.session['uid']+'.pdf'
             path_local = settings.MEDIA_ROOT+'/'+file_name
-            # print(path_local)
             storage.child(path_on_cloud).put(path_local)
             val = data.val()
             val['marks'] = '-'
@@ -143,7 +134,6 @@ def reset_password(request):
     name = db.child("students").child(request.session['uid']).get()
     fauth = firebase.auth()
     info = fauth.get_account_info(request.session['idToken'])
-    print(info['users'][0]['email'])
     try:
         fauth.send_password_reset_email(info['users'][0]['email'])
     except Exception as e:

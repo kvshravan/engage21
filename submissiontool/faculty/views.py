@@ -40,7 +40,6 @@ def dashboard(request):
     if "uid" not in request.session:
         return redirect(home)
     db = firebase.database()
-    print(request.session['uid'])
     name = db.child("faculty").child(request.session['uid']).get()
     assignmentsData = db.child("assignments").order_by_child(
         "facultyid").equal_to(request.session['uid']).get()
@@ -78,14 +77,11 @@ def createAssignment(request):
                     "sectionid": request.POST.get("sectionid")
                     }
             ref = db.child("assignments").push(data)
-            print(ref)
             uploaded_file = request.FILES['assignment']
             file_name = default_storage.save(ref['name']+'.pdf', uploaded_file)
-            # print(file_name)
             storage = firebase.storage()
             path_on_cloud = ref['name']+'/'+ref['name']+'.pdf'
             path_local = settings.MEDIA_ROOT+'/'+file_name
-            # print(path_local)
             storage.child(path_on_cloud).put(path_local)
             return redirect(dashboard)
         except Exception as e:
@@ -123,7 +119,6 @@ def view_submissions(request, slug=None):
         slug).get()
     asname = db.child("assignments").child(slug).child(
         "asname").get()
-    print(assignmentsData.val())
     return render(request, 'faculty/view.html',
                   {'name': name.val(),
                    'asid': slug,
@@ -137,11 +132,9 @@ def generate_link(assignment_id, student_id, uid):
         storage = firebase.storage()
         link = storage.child(assignment_id).child(
             "submissions").child(student_id+'.pdf').get_url(uid)
-        print(link)
         return link
     except Exception as e:
-        print(e)
-        print('Failed')
+        print('error')
 
     return link
 
@@ -153,14 +146,13 @@ def extend_deadline(request, slug=None):
     db = firebase.database()
     name = db.child("faculty").child(request.session['uid']).get()
     assignment = db.child("assignments").child(slug).get()
-    print(assignment.val())
     if request.method == "POST":
         try:
             db.child("assignments").child(slug).update(
                 {'deadline': request.POST.get("newdeadline")})
             return redirect(dashboard)
         except Exception as e:
-            raise
+            print('error')
 
     return render(request, 'faculty/extend.html', {'name': name.val(), 'asObj': assignment.val()})
 
@@ -177,14 +169,13 @@ def evaluate_submission(request, asid=None, sid=None):
         "submissions").child(asid).child(sid).get()
     val = assignment.val()
     val['link'] = generate_link(asid, sid, request.session['uid'])
-    print(val)
     if request.method == "POST":
         try:
             db.child("assignments").child("submissions").child(asid).child(sid).update(
                 {'marks': request.POST.get("newmarks")})
             return redirect('faculty-view', slug=asid)
         except Exception as e:
-            raise
+            print('error')
 
     return render(request, 'faculty/evaluate.html', {'name': name.val(), 'asname': asname.val(), 'asObj': val})
 
@@ -211,7 +202,6 @@ def admin(request):
             return redirect(dashboard)
         except Exception as e:
             message = "Invalid Credentials"
-            print(e)
 
     return render(request, 'faculty/admin.html', {"message": message})
 
@@ -225,7 +215,6 @@ def delete(request, aid):
     name = db.child("faculty").child(request.session['uid']).get()
     asname = db.child("assignments").child(aid).child(
         "asname").get()
-    print(asname.val())
     if request.method == "POST":
         try:
             db.child("assignments").child(aid).remove()
@@ -248,7 +237,6 @@ def reset_password(request):
     name = db.child("faculty").child(request.session['uid']).get()
     fauth = firebase.auth()
     info = fauth.get_account_info(request.session['idToken'])
-    print(info['users'][0]['email'])
     try:
         fauth.send_password_reset_email(info['users'][0]['email'])
     except Exception as e:
