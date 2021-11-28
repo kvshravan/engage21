@@ -1,9 +1,9 @@
 # Submission tool
 
-MAIN FEATURES-
+## MAIN FEATURES
 1) Estimate student workload (number of assignments/numberof days until deadline)
 2) extent deadline
-Features-
+## Features
 1) Faculty - Login
 2) Faculty - SignUp (using admin)
 3) Student - Login
