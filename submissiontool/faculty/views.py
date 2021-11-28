@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from submissiontool.config import firebase, firebaseConfig
+from submissiontool.config import firebase
 from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -21,12 +20,11 @@ def home(request):
         try:
             user = fauth.sign_in_with_email_and_password(email, password)
             session_id = user['localId']
-            print(request)
             request.session['uid'] = str(session_id)
+            request.session['idToken'] = str(user['idToken'])
             return redirect(dashboard)
         except Exception as e:
             message = "Invalid Credentials"
-            print(e)
 
     return render(request, 'faculty/home.html', {"message": message})
 
@@ -42,6 +40,7 @@ def dashboard(request):
     if "uid" not in request.session:
         return redirect(home)
     db = firebase.database()
+    print(request.session['uid'])
     name = db.child("faculty").child(request.session['uid']).get()
     assignmentsData = db.child("assignments").order_by_child(
         "facultyid").equal_to(request.session['uid']).get()
@@ -55,7 +54,7 @@ def dashboard(request):
                 sectionData[sectionKey] = []
             sectionData[sectionKey].append(detailDict)
     except Exception as e:
-        print('error')
+        message = "Error"
     return render(request, 'faculty/dashboard.html',
                   {'name': name.val(),
                    'assignmentData': sectionData})
@@ -90,7 +89,6 @@ def createAssignment(request):
             storage.child(path_on_cloud).put(path_local)
             return redirect(dashboard)
         except Exception as e:
-            print(e)
             message = "Error in uploading"
     if request.method == "POST" and 'workload' in request.POST:
         assignmentsData = db.child("assignments").order_by_child(
@@ -189,3 +187,70 @@ def evaluate_submission(request, asid=None, sid=None):
             raise
 
     return render(request, 'faculty/evaluate.html', {'name': name.val(), 'asname': asname.val(), 'asObj': val})
+
+
+@never_cache
+def admin(request):
+    if "uid" in request.session:
+        return redirect(dashboard)
+    message = None
+    if request.method == "POST":
+        aemail = request.POST.get('aemail')
+        apassword = request.POST.get('asecretkey')
+        femail = request.POST.get('femail')
+        fpassword = request.POST.get('fsecretkey')
+        fname = request.POST.get('fname')
+        fauth = firebase.auth()
+        db = firebase.database()
+        try:
+            user = fauth.sign_in_with_email_and_password(aemail, apassword)
+            fuser = fauth.create_user_with_email_and_password(
+                femail, fpassword)
+            session_id = fuser['localId']
+            ref = db.child("faculty").child(session_id).set({'name': fname})
+            return redirect(dashboard)
+        except Exception as e:
+            message = "Invalid Credentials"
+            print(e)
+
+    return render(request, 'faculty/admin.html', {"message": message})
+
+
+@never_cache
+def delete(request, aid):
+    if "uid" not in request.session:
+        return redirect(home)
+    message = None
+    db = firebase.database()
+    name = db.child("faculty").child(request.session['uid']).get()
+    asname = db.child("assignments").child(aid).child(
+        "asname").get()
+    print(asname.val())
+    if request.method == "POST":
+        try:
+            db.child("assignments").child(aid).remove()
+            try:
+                db.child("assignments").child(
+                    "submissions").child(aid).remove()
+            except Exception as e:
+                message = None
+            return redirect(dashboard)
+        except Exception as e:
+            message = "Error"
+    return render(request, 'faculty/delete.html', {"message": message, 'name': name.val(), 'asname': asname.val()})
+
+
+@never_cache
+def reset_password(request):
+    if "idToken" not in request.session:
+        return redirect(home)
+    db = firebase.database()
+    name = db.child("faculty").child(request.session['uid']).get()
+    fauth = firebase.auth()
+    info = fauth.get_account_info(request.session['idToken'])
+    print(info['users'][0]['email'])
+    try:
+        fauth.send_password_reset_email(info['users'][0]['email'])
+    except Exception as e:
+        print('error')
+    return render(request, 'faculty/reset.html', {'name': name.val()})

@@ -12,7 +12,7 @@ if (self != top) { try { if (document.domain != top.document.domain) { throw "Cl
 // -->
 </script>
 
-<title>Faculty - Login</title>
+<title>Faculty - SignUp</title>
 <style type="text/css">
 /* avoid stupid IE6 bug with frames and scrollbars */
 #more{
@@ -39,27 +39,37 @@ td {
 <tr><td bgcolor="#ffffff" align="left">
   <hr>
 
-<table bgcolor="#ffffff" align="center" border="0" width="100%"><tr><td align="right" width="30%"> Email:</td>
-<td align="left" width="70%"><input type="email" name="email" value="" onfocus="alreadyFocused=true;" required/>
+<table bgcolor="#ffffff" align="center" border="0" width="100%"><tr><td align="right" width="30%">Admin Email:</td>
+<td align="left" width="70%"><input type="email" name="aemail" value="" onfocus="alreadyFocused=true;" required/>
 </td>
 </tr>
 <br>
-<tr><td align="right" width="30%">Password:</td>
-<td align="left" width="70%"><input type="password" name="secretkey" onfocus="alreadyFocused=true;" required/>
-
+<tr><td align="right" width="40%">Admin Password:</td>
+<td align="left" width="70%"><input type="password" name="asecretkey" onfocus="alreadyFocused=true;" required/>
+</td>
+</tr>
+<tr><td align="right" width="30%">Faculty Name:</td>
+<td align="left" width="70%"><input type="text" name="fname" onfocus="alreadyFocused=true;" required/>
+</td>
+</tr>
+<tr><td align="right" width="30%">Faculty Email:</td>
+<td align="left" width="70%"><input type="text" name="femail" onfocus="alreadyFocused=true;" required/>
+</td>
+</tr>
+<tr><td align="right" width="30%">Faculty Password:</td>
+<td align="left" width="70%"><input type="password" name="fsecretkey" onfocus="alreadyFocused=true;" required/>
 </td>
 </tr>
 </table>
 </td>
 </tr>
 
-<tr><td align="left"><center><input id="more" type="submit" value="Login" />
+<tr><td align="left"><center><input id="more" type="submit" value="Create " />
 </center></td>
 </tr>
 </table>
 </center></td>
 </tr>
-<tr><td align="left"><center><small>Don't have an account? <a href="{% url 'faculty-admin' %}">SignUp using Admin</a> </small></p>
 </table>
 <center>
 {%if message%}

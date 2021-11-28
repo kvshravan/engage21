@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from submissiontool.config import firebase, firebaseConfig
+from submissiontool.config import firebase
 from django.views.decorators.cache import never_cache
 from django.contrib import auth
 from django.core.files.storage import default_storage
@@ -23,6 +22,7 @@ def home(request):
             session_id = user['localId']
             print(request)
             request.session['uid'] = str(session_id)
+            request.session['idToken'] = str(user['idToken'])
             return redirect(dashboard)
         except:
             message = "Invalid Credentials"
@@ -133,3 +133,19 @@ def submit_assignment(request, slug=None):
         return redirect(dashboard)
 
     return render(request, 'student/submit.html', {'student': data.val(), 'asObj': assignment.val()})
+
+
+@never_cache
+def reset_password(request):
+    if "idToken" not in request.session:
+        return redirect(home)
+    db = firebase.database()
+    name = db.child("students").child(request.session['uid']).get()
+    fauth = firebase.auth()
+    info = fauth.get_account_info(request.session['idToken'])
+    print(info['users'][0]['email'])
+    try:
+        fauth.send_password_reset_email(info['users'][0]['email'])
+    except Exception as e:
+        print('error')
+    return render(request, 'student/reset.html', {'name': name.val()})

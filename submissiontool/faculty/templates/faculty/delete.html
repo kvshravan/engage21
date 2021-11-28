@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Faculty | Dashboard</title>
+  <title>Faculty | Delete</title>
 
   <!-- Bootstrap core CSS -->
   <link href= "{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -34,6 +34,16 @@
       padding-top: .3em;
       padding-bottom: .3em;
   }
+  #loading {
+    display: none;
+    width: 35px;
+    height: 35px;
+    background: url(/static/indicator-big.gif) no-repeat;
+    cursor: wait;
+    }
+    #show-message{
+      display: none;
+    }
   </style>
 </head>
 
@@ -45,9 +55,7 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Hello {{name.name}}</div>
       <div class="list-group list-group-flush">
-        <a href="" class="list-group-item list-group-item-action bg-light">Home</a>
-        <a href="{% url 'faculty-create' %}" class="list-group-item list-group-item-action bg-light">Create Assignment</a>
-        <a href="{% url 'faculty-reset' %}" class="list-group-item list-group-item-action bg-light">Change Password</a>
+        <a href="{% url 'faculty-dashboard' %}" class="list-group-item list-group-item-action bg-light">Home</a>
         <a href="{% url 'faculty-logout' %}" class="list-group-item list-group-item-action bg-light">Log Out</a>
       </div>
     </div>
@@ -64,36 +72,18 @@
       <div class="container-fluid">
 
         <div class="grid-x">
-        {% if assignmentData%}
-          {% for section,assignmentIter in assignmentData.items %}
-          <b><h4 >Assignments | Section - {{ section }}</h4></b>
+         <form enctype="multipart/form-data" method="post" name="course_name" onsubmit="loading()">
+         {% csrf_token %}
+       <h1>Delete Assignment</h1>
+       <h4>Are you sure to delete the assignment -  {{asname}}.</h4>
+       <hr>
+       <center>
+       <input class="btn btn-outline-danger" onclick="buttonIndex=0;" type="submit" name="yes" value="Delete">
+       <hr>
+       </center>
+       <br>
 
-          <table class="stack hover sortable" id="courseTable">
-            <thead>
-              <tr>
-                  <th >Course Name</th>
-                  <th >Assignment</th>
-                  <th >Deadline</th>
-                  <th >Submission</th>
-                  <th >Delete</th>
-                </tr>
-            </thead>
-              <tbody>
-                {% for item in assignmentIter%}
-                <tr>
-                  <td onclick="myFunction(event)" id="#more">{{ item.course_id }}</td>
-                  <td>{{item.asname}}</td>
-                  <td>{{item.deadline}} <a href="{% url 'faculty-extend' item.assign_id %}">(extend)</a></td>
-                  <td><a href="{% url 'faculty-view' item.assign_id %}">View Submissions</a></td>
-                  <td><a href="{% url 'faculty-delete' item.assign_id %}">Delete Assignment</a></td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          {% endfor %}
-        {% else %}
-       <center><h5>No assignments to display. To create an Assignment head over to Create Assignment page.</h5></center>
-       {% endif %}
+    </form>
    </div>
       </div>
       <center>
@@ -115,6 +105,16 @@
       $("#wrapper").toggleClass("toggled");
     });
   </script>
+    <script type="text/javascript">// <![CDATA[
+        function loading(){
+          window.scrollTo(0, 0);
+          if (buttonIndex == 1){
+            $("#show-message").show();
+            $("#loading").show();
+          }
+        }
+// ]]></script>
+
 
 </body>
 
