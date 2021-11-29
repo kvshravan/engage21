@@ -21,3 +21,12 @@
 For faculty to sign up admin detalis are required :
   Admin email - admin@admin.com
   Admin password - admin123
+
+## Credentials used in the video demo
+
+Faculty email - shravan.gcloud@gmail.com
+Faculty password - kvshravan1@
+
+Student email - kandadishravan@gmail.com
+Student password - kvshravan1@
+
