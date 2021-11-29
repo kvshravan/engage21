@@ -74,7 +74,7 @@ def createAssignment(request):
                     "asname": request.POST.get("asname"),
                     "deadline": request.POST.get("deadline"),
                     "facultyid": request.session['uid'],
-                    "sectionid": request.POST.get("sectionid")
+                    "sectionid": str(request.POST.get("sectionid")).upper()
                     }
             ref = db.child("assignments").push(data)
             uploaded_file = request.FILES['assignment']
