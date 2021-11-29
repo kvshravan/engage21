@@ -45,7 +45,7 @@ def signUp(request):
             db = firebase.database()
             data = {'rollno': request.POST.get('rollno'),
                     'name': request.POST.get('name'),
-                    'section_id': request.POST.get('section_id')
+                    'section_id': str(request.POST.get('section_id')).upper()
                     }
             ref = db.child("students").child(request.session['uid']).set(data)
             return redirect(dashboard)
