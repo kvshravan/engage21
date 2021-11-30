@@ -100,7 +100,9 @@ def createAssignment(request):
             for key, item in value.items():
                 if item['deadline'] >= today and item['deadline'] <= request.POST.get("deadline"):
                     noAssignments += 1
-        load = ((noAssignments+1)/(noDays))
+        load = 0
+        if noDays > 0:
+            load = ((noAssignments+1)/(noDays))
         workLoad = {"noDays": noDays, "noAssignments": noAssignments,
                     "deadline": request.POST.get("deadline"),
                     "load": 2*load,
