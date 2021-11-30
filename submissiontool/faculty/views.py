@@ -94,15 +94,15 @@ def createAssignment(request):
         today = datetime.today().strftime(date_format)
         delta = datetime.strptime(request.POST.get(
             "deadline"), date_format) - datetime.strptime(today, date_format)
-        noDays = delta.days
+        noDays = 1
+        if delta.days > 0:
+            noDays = delta.days
         value = assignmentsData.val()
         if len(value) > 0:
             for key, item in value.items():
                 if item['deadline'] >= today and item['deadline'] <= request.POST.get("deadline"):
                     noAssignments += 1
-        load = 0
-        if noDays > 0:
-            load = ((noAssignments+1)/(noDays))
+        load = ((noAssignments+1)/(noDays))
         workLoad = {"noDays": noDays, "noAssignments": noAssignments,
                     "deadline": request.POST.get("deadline"),
                     "load": 2*load,
